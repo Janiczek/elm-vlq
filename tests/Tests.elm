@@ -31,21 +31,21 @@ suite =
     Test.describe "VLQ"
         [ Test.describe "Hardcoded examples"
             (List.map testExample examples)
-        , Test.fuzz groupsFuzzer "Roundtrip: groups |> encode |> decode == Just groups" <|
-            \groups ->
-                groups
+        , Test.fuzz listFuzzer "Roundtrip: numbers |> encode |> decode == Just numbers" <|
+            \list ->
+                list
                     |> VLQ.encode
                     |> VLQ.decode
-                    |> Expect.equal (Just groups)
-        , Test.fuzz boundedIntFuzzer "encodeSingle == encode << List.singleton" <|
+                    |> Expect.equal (Just list)
+        , Test.fuzz boundedIntFuzzer "encodeSingle n == encode [n]" <|
             \n ->
                 VLQ.encodeSingle n
                     |> Expect.equal (VLQ.encode [ n ])
         ]
 
 
-groupsFuzzer : Fuzzer (List Int)
-groupsFuzzer =
+listFuzzer : Fuzzer (List Int)
+listFuzzer =
     Fuzz.list boundedIntFuzzer
 
 
